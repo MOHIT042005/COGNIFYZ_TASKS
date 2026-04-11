@@ -4,11 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input {
+            margin: 10px;
+            padding: 8px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white
+        }
+
+</style>
+    <script>
+        function validateForm() {
+            let name = document.forms["myform"]["username"].value;
+            let email = document.forms["myform"]["useremail"].value;
+            let phone = document.forms["myform"]["phone"].value;
+
+            if(name === "" || email === "" || phone === "") {
+                alert("All fields are required!");
+                return false;
+            }
+            if(!email.includes("@")) {
+                alert("Invalid email!");
+                return false;
+            }
+            if(phone.length !== 10) {
+                alert("Phone must be 10 digits!");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </head>
 <body>
     <h2>Enter your Details</h2>
 
-    <form action="/submit" method="POST">
+    <form action="/submit" method="POST" onsubmit="return validateForm()">
         <input type="text" name ="username" placeholder="Enter name" required>
         <input type="email" name="useremail" placeholder="Enter your email" required>
         <input type="number" name="phonenumber" placeholder="Enter your phonenumber" required>
