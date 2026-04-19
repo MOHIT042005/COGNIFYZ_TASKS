@@ -104,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         }
+        form.reset();
 
 
     });
@@ -146,15 +147,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadUsers();
 
+    const token = localStorage.getItem("token");
+
+    if(token) {
+        document.getElementById("logoutBtn").style.display = "block";
+    }
+
 
     
 });
 
 async function loadUsers() {
     try {
-        const response = await fetch('/users');
+        const token = localStorage.getItem("token");
+
+        if(!token) {
+            console.log("User not logged in - skipping loadUsers()");
+            return;
+        }
+        const response = await fetch('/users', {
+            headers: {
+                'Authorization': token
+            }
+        });
         const users = await response.json();
 
+        if(!Array.isArray(users)) {
+            console.log("Not authorized or error:", users);
+            return;
+        }
         const userList = document.getElementById("userList");
         userList.innerHTML = "";
 
@@ -176,8 +197,22 @@ async function loadUsers() {
     } catch (err) {
         console.log(err);
     }
+
+    if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("token");
+        console.log("Session expired. Please login again.");
+        return;
+    }
 }
 async function deleteUser(id) {
+    const token = localStorage.getItem("token");
+
+    await fetch(`/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': token
+        }
+    })
     try {
         await fetch(`/users/${id}`, {
             method: 'DELETE'
@@ -188,4 +223,41 @@ async function deleteUser(id) {
     } catch (err) {
         console.log(err);
     }
+}
+
+async function loginUser() {
+
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        console.log("login response:", data); 
+
+        if(data.token) {
+            localStorage.setItem("token", data.token);
+            console.log("Token saved");
+            document.getElementById("logoutBtn").style.display = "block";
+            loadUsers();
+        }
+
+        document.getElementById("result").innerText = data.message;
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function logoutUser(){
+    localStorage.removeItem("token");
+    document.getElementById("logoutBtn").style.display = "none";
+    document.getElementById("result").innerText = "logged out";
+    document.getElementById("userList").innerHTML = "";
 }

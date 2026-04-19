@@ -83,6 +83,18 @@
 <!-- RESULT -->
 <div id="result" class="text-center mt-3 text-success fw-bold"></div>
 
+<h4 class="mt-5 text-center">Login</h4>
+<div class="container mt-3">
+    <input class="form-control mb-2" type="email" id="loginEmail" placeholder="Email">
+    <input class="form-control mb-2" type="password" id="loginPassword" placeholder="Password">
+    <button class="btn btn-success w-100" onclick="loginUser()">Login</button>
+    <button id="logoutBtn" 
+            onclick="logoutUser()" 
+            class="btn btn-outline-danger w-100" >
+            Logout
+    </button>
+</div>
+
 <!-- FOOTER -->
 <footer class="bg-dark text-white text-center mt-5 p-3">
     © 2026 Form APP
