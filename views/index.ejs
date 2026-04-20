@@ -19,6 +19,14 @@
     </div>
 </nav>
 
+<% if (user) { %>
+<div class="alert alert-success">
+    Welcome <strong><%= user.displayName %></strong>
+</div>
+<% } %>
+
+
+
 <!-- FORM -->
 <div class="container mt-5">
     <div class="card p-4 shadow form-card">
@@ -35,6 +43,13 @@
             <!-- Email -->
             <input class="form-control mb-2" type="email" id="useremail" placeholder="Enter your email">
             <small id="emailError" class="text-danger"></small>
+
+            <small id="emailvalidation" class="text-danger"></small>
+
+            <div class="d-flex mb-2">
+                <input id="countryCode" class="form-control me-2" type="text" placeholder="+91" readonly style="max-width:80px;">
+                <input id="phonenumber" class="form-control" type="text" placeholder="Enter phone number">
+            </div>
 
             <!-- Phone -->
             <input class="form-control mb-2" type="text" id="phonenumber" placeholder="Enter your phone number">
@@ -61,20 +76,42 @@
             <small id="genderError" class="text-danger"></small>
 
             <!-- Address -->
-            <textarea class="form-control mb-2" id="address" placeholder="Address"></textarea>
+            <textarea id="address" class="form-control mb-2" id="address" placeholder="Address"></textarea>
             <small id="addressError" class="text-danger"></small>
 
+            <!--LOCATION_API-->
+            <button type="button" onclick="getLocation()" class="btn btn-info mt-2">
+                Use My Location
+            </button>
+            <p id="locationStatus" class="mt-2 text-sucess"></p>
+
             <!-- City -->
-            <input class="form-control mb-2" type="text" id="city" placeholder="City">
+            <input id="city" class="form-control mb-2" type="text" id="city" placeholder="City">
 
             <!-- State -->
-            <input class="form-control mb-3" type="text" id="state" placeholder="State">
+            <input id="state" class="form-control mb-3" type="text" id="state" placeholder="State">
 
             <button class="btn btn-primary w-100">Submit</button>
+            <% if(!user) { %>
+            <div class="text-center mt-3">
+                <a href="/auth/google" class="btn btn-light google-btn border">
+                    <img src="https://img.icons8.com/color/16/google-logo.png">
+                        Login with Google
+                </a>
+            </div>
+            <% } %>
         </form>
 
     </div>
 </div>
+
+<% if (user) { %>
+<div class="text-center mt-3">
+    <a href="/logout" class="btn btn-secondary">
+        Logout
+    </a>
+</div>
+<% } %>
 
 <h4 class="mt-5 text-center">Registered Users</h4>
 
@@ -82,7 +119,10 @@
 
 <!-- RESULT -->
 <div id="result" class="text-center mt-3 text-success fw-bold"></div>
+<div id="weatherBox" class="mt-4 text-center"></div>
 
+
+    <% if(!user) { %>
 <h4 class="mt-5 text-center">Login</h4>
 <div class="container mt-3">
     <input class="form-control mb-2" type="email" id="loginEmail" placeholder="Email">
@@ -94,7 +134,9 @@
             Logout
     </button>
 </div>
+    <% } %>
 
+    
 <!-- FOOTER -->
 <footer class="bg-dark text-white text-center mt-5 p-3">
     © 2026 Form APP

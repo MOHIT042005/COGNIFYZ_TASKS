@@ -109,6 +109,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
+    const emailInput = document.getElementById("useremail");
+
+    emailInput.addEventListener("input", function () {
+        const email = this.value;
+
+        const emailPattern = 
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if(email === "") {
+                    document.getElementById("emailValidation").innerText =
+                    "";
+                } else if (!emailPattern.test(email)) {
+                    document.getElementById("emailValidation").innerText = 
+                     "Invalid email format";
+                } else {
+                    document.getElementById("emailValidation").innerText = 
+                    "Valid email";
+                }
+                }); 
+
     // LIVE VALIDATION 
 
     document.getElementById("username").addEventListener("input", function () {
@@ -260,4 +280,113 @@ function logoutUser(){
     document.getElementById("logoutBtn").style.display = "none";
     document.getElementById("result").innerText = "logged out";
     document.getElementById("userList").innerHTML = "";
+}
+
+function getLocation() {
+
+    if(!navigator.geolocation) {
+        document.getElementById("locationStatus").innerText = 
+        "Geolocation is not supported by your browser";
+        return;
+    }
+
+    document.getElementById("locationStatus").innerText = 
+    "Getting your location...";
+
+    navigator.geolocation.getCurrentPosition(
+        successCallback,
+        errorCallback
+    );
+}
+
+function successCallback(position) {
+
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Full location data:", data);
+
+        const address = data.address;
+
+        document.getElementById("city").value =
+            address.city || address.town || address.village || "";
+
+        document.getElementById("state").value = 
+            address.state || "";
+
+        document.getElementById("address").value = 
+            data.display_name || "";
+
+            const countryMap = {
+                "India": "+91",
+                "United States": "+1",
+                "United Kingdom": "+44",
+                "Canada": "+1",
+                "Australia": "+61",
+                "Germany": "+49",
+                "France": "+33"
+            };
+
+            const country = address.country;
+
+            document.getElementById("countryCode").value = 
+                countryMap[country] || "+00";
+    })
+    .catch(err => {
+        console.log("Error fetching location:", err);
+    });
+
+    document.getElementById("locationStatus").innerText = 
+    "Location fetched successfully";
+
+    window.userLocation = { latitude, longitude};
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(address.city || address.town || address.village)}&appid=029bc3fe033042977d7c6dbdf894ecf2&units=metric`)
+    .then(response => response.json())
+    .then(weatherData => {
+
+        console.log("Weather Data:", weatherData);
+
+        if(!weatherData.main) {
+            document.getElementById("weatherBox").innerText = 
+             "Weather data not available";
+             return;
+        }
+
+        const temp = weatherData.main.temp;
+        const condition = weatherData.weather[0].main;
+
+        document.getElementById("weatherBox").innerHTML = 
+            `Weather in ${weatherData.name}: <br>
+            <strong>${temp}*C</strong>, ${condition}`;
+    })
+
+    .catch(err=> {
+        console.log("Weather error:", err);
+        document.getElementById("weatherBox").innerText =
+         "Unable to fetch weather";
+    });
+}
+
+function errorCallback(error) {
+    let message = "";
+    
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            message = "Permission denied";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            message = "Location unavailable";
+            break;
+        case error.TIMEOUT:
+            message = "Request timed out";
+            break;
+        default:
+            message = "Unkown error";
+    }
+
+    document.getElementById("locationStatus").innerText = message;
 }

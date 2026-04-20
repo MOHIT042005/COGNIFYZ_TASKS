@@ -1,57 +1,123 @@
-body {
-    background-color: #f4f6f8;
+/* ===== Base Layout ===== */
+html, body {
+    height: 100%;
+    margin: 0;
     font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f4f6f8, #eef1f5);
+}
+
+body {
     display: flex;
     flex-direction: column;
 }
-html,body {
-    height: 100%;
-    margin: 0;
-}
+
 .container {
     flex: 1;
 }
+
+/* ===== Navbar ===== */
+.navbar {
+    background: linear-gradient(90deg, #0d6efd, #3a8bfd) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Form Card ===== */
 .form-card {
-    max-width: 400px;
+    max-width: 420px;
     margin: auto;
-    border-radius: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.form-card:hover {
+    transform: translateY(-3px);
+}
+
+/* ===== Inputs ===== */
+input.form-control,
+textarea.form-control {
+    border-radius: 8px;
+    border: 1px solid #dcdfe3;
+    padding: 10px;
+    transition: all 0.2s ease;
+}
+
+input.form-control:focus,
+textarea.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.2);
+}
+
+/* ===== Buttons ===== */
+button,
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* Primary button (Submit) */
+.btn-primary {
+    background: linear-gradient(90deg, #0d6efd, #3a8bfd);
     border: none;
 }
 
-input.form-control {
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    padding: 10px;
+.btn-primary:hover {
+    background: linear-gradient(90deg, #0b5ed7, #2f74e0);
+    transform: translateY(-1px);
 }
 
-input.form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: none;
+/* Google Button */
+.google-btn {
+    width: 65%;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 14px;
 }
 
-button {
-    border-radius: 6px;
-    font-weight: 500;
+.google-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
 }
 
-.navbar {
-    background-color: #0d6efd !important;
-}
-
-footer {
-    background-color: #0d6efd !important;
-}
-
-@media (max-width: 768px) {
-    .form-card {
-        margin: 20px;
-    }
-}
-
+/* Logout Button */
 #logoutBtn {
     display: none;
     margin-top: 15px;
     padding: 6px 12px;
-    border-radius: 6px;
-    background-color: black;
+    border-radius: 8px;
+    background-color: #343a40;
+    color: white;
+}
+
+#logoutBtn:hover {
+    background-color: #23272b;
+}
+
+/* ===== Footer ===== */
+footer {
+    background: linear-gradient(90deg, #0d6efd, #3a8bfd) !important;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+}
+
+/* ===== Alerts ===== */
+.alert {
+    border-radius: 8px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .form-card {
+        margin: 20px;
+    }
+
+    .google-btn {
+        width: 100%;
+    }
 }
